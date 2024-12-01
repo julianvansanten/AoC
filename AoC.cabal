@@ -1,0 +1,92 @@
+cabal-version: 2.2
+
+-- This file has been generated from package.yaml by hpack version 0.36.0.
+--
+-- see: https://github.com/sol/hpack
+
+name:           AoC
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/julianvansanten/AoC#readme>
+homepage:       https://github.com/julianvansanten/AoC#readme
+bug-reports:    https://github.com/julianvansanten/AoC/issues
+author:         julianvansanten
+maintainer:     julian@julianvansanten.nl
+copyright:      2024 julianvansanten
+license:        BSD-3-Clause
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/julianvansanten/AoC
+
+library
+  exposed-modules:
+      Y2024.Day1.Day1
+      Y2024.Day10.Day10
+      Y2024.Day11.Day11
+      Y2024.Day12.Day12
+      Y2024.Day13.Day13
+      Y2024.Day14.Day14
+      Y2024.Day15.Day15
+      Y2024.Day16.Day16
+      Y2024.Day17.Day17
+      Y2024.Day18.Day18
+      Y2024.Day19.Day19
+      Y2024.Day2.Day2
+      Y2024.Day20.Day20
+      Y2024.Day21.Day21
+      Y2024.Day22.Day22
+      Y2024.Day23.Day23
+      Y2024.Day24.Day24
+      Y2024.Day25.Day25
+      Y2024.Day3.Day3
+      Y2024.Day4.Day4
+      Y2024.Day5.Day5
+      Y2024.Day6.Day6
+      Y2024.Day7.Day7
+      Y2024.Day8.Day8
+      Y2024.Day9.Day9
+      Y2024.SolutionsCollector
+  other-modules:
+      Paths_AoC
+  autogen-modules:
+      Paths_AoC
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  build-depends:
+      base >=4.7 && <5
+  default-language: Haskell2010
+
+executable AoC-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_AoC
+  autogen-modules:
+      Paths_AoC
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      AoC
+    , base >=4.7 && <5
+  default-language: Haskell2010
+
+test-suite AoC-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_AoC
+  autogen-modules:
+      Paths_AoC
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      AoC
+    , base >=4.7 && <5
+  default-language: Haskell2010
