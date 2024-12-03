@@ -18,7 +18,7 @@ solve1 = show . sum . map eval . parseOperations
 
 
 solve2 :: String -> String
-solve2 = error "Second solution of day 3 not implemented yet!"
+solve2 = show . sum . map eval . filterMuls 0 . parseOperations
 
 sample :: String
 sample = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"
@@ -39,13 +39,19 @@ parseOperations s = case parse operations "" s of
 -- Everything that is not a mul with two integers is ignored.
 -- Example: `parseOperations "%^&mul(2,4)xxxmul(3,7)do_not_mul(5,5)mul(32,64)mul(11,8)mul(8,5)"` returns `[Mul 2 4, Mul 3 7, Mul 32 64, Mul 11 8, Mul 8 5]`
 operations :: Parser [Operation]
-operations = many (try op <|> (anyChar >> return (Mul 0 0))) -- try is needed to backtrack if the first parser fails
+operations = filter (/= Nop) <$> many (try op <|> (anyChar >> return Nop)) -- try is needed to backtrack if the first parser fails
 
+
+-- | Parse a single operation
+op :: Parser Operation
+op = try mul <|> try do_ <|> dont
+    where do_ = string "do()" >> return Do
+          dont = string "don't()" >> return Dont
 
 
 -- | Parse a single mul into an operation
-op :: Parser Operation
-op = do
+mul :: Parser Operation
+mul = do
     _ <- string "mul("
     l <- integer
     _ <- string ","
@@ -53,11 +59,26 @@ op = do
     _ <- string ")"
     return $ Mul l r
 
+
 -- | An operation is only a Mul for the first exercise
 data Operation = Mul Integer Integer
+    | Do
+    | Dont
+    | Nop
     deriving (Eq, Show)
 
 
 -- | Evaluate a parsed operation
 eval :: Operation -> Integer
 eval (Mul l r) = l * r
+eval _ = 0
+
+
+-- | Filter all Mul operations between a Dont and a Do
+filterMuls :: Int -> [Operation] -> [Operation]
+filterMuls _ [] = []
+filterMuls n (m@(Mul _ _):xs) | n == 0 = m:filterMuls n xs
+    | otherwise = filterMuls n xs
+filterMuls _ (Do:xs) = filterMuls 0 xs
+filterMuls n (Dont:xs) = filterMuls (n + 1) xs
+filterMuls n (Nop:xs) = filterMuls n xs
