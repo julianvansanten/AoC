@@ -17,7 +17,7 @@ isSafe :: Int -> [Int] -> Bool
 isSafe (-1) _ = False
 isSafe _ [] = True
 isSafe _ [_] = True
-isSafe n l@(x:xs) = decreasing n l || increasing n l || isSafe (n - 1) xs
+isSafe n l@(_:xs) = decreasing n l || increasing n l || isSafe (n - 1) xs
 
 
 decreasing :: Int -> [Int] -> Bool
