@@ -17,11 +17,11 @@ sample = "MMMSXXMASM\nMSAMXMSMSA\nAMXSXMAAMM\nMSAMASMSMX\nXMASAMXAMM\nXXAMMXXAMA
 
 test1 :: Spec
 test1 = describe "Y2024.Day4.Day4.solve1" $ do
-    it "Should solve the sample correctly" $ do
+    it "should correctly count all occurrences of XMAS in all directions" $ do
         fst getDaySolutions sample `shouldBe` "18"
 
 
 test2 :: Spec
 test2 = describe "Y2024.Day4.Day4.solve2" $ do
-    it "is not implemented yet" $ do
+    it "should find all MAS words in the matrix" $ do
         snd getDaySolutions sample `shouldBe` "9"

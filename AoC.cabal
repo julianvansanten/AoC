@@ -84,6 +84,9 @@ test-suite AoC-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Y2024.Day1.Day1Spec
+      Y2024.Day2.Day2Spec
+      Y2024.Day3.Day3Spec
       Y2024.Day4.Day4Spec
       Paths_AoC
   autogen-modules:

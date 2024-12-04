@@ -5,7 +5,7 @@ import qualified Data.Functor.Identity
 import Text.Parsec.String (Parser)
 import Control.Applicative (Alternative(..))
 import Text.Parsec (parse)
-import Text.Parsec.Prim (try)
+import Text.Parsec.Prim (try, ParsecT)
 import Text.Parsec.Char (string, anyChar)
 
 
@@ -20,12 +20,10 @@ solve1 = show . sum . map eval . parseOperations
 solve2 :: String -> String
 solve2 = show . sum . map eval . filterMuls 0 . parseOperations
 
-sample :: String
-sample = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"
-
 
 lexer :: Token.GenTokenParser String u Data.Functor.Identity.Identity
 lexer = Token.makeTokenParser emptyDef
+integer :: Text.Parsec.Prim.ParsecT   String u Data.Functor.Identity.Identity Integer
 integer = Token.integer lexer
 
 
