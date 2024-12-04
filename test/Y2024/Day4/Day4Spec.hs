@@ -1,4 +1,4 @@
-module Y2024.Day4.Day4Spec where
+module Y2024.Day4.Day4Spec (spec) where
 
 
 import Y2024.Day4.Day4 (getDaySolutions)
@@ -23,4 +23,5 @@ test1 = describe "Y2024.Day4.Day4.solve1" $ do
 
 test2 :: Spec
 test2 = describe "Y2024.Day4.Day4.solve2" $ do
-    it "is not implemented yet" $ False
+    it "is not implemented yet" $ do
+        snd getDaySolutions sample `shouldBe` "9"
