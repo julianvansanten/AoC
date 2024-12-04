@@ -13,7 +13,11 @@ solve1 :: String -> String
 solve1 = show . countTotal . lines
 
 solve2 :: String -> String
-solve2 = error "Second solution of day 4 not implemented yet!"
+solve2 str = show neighbours
+    where
+        strIndices = matrixToIdList 0 (lines str)
+        aLocations = filterAs strIndices
+        neighbours = concatMap (`getNeighbours` strIndices) aLocations
 
 
 -- | Count the total number of occurrances of XMAS in a matrix
@@ -40,3 +44,30 @@ countXmas [_,_] = 0
 countXmas [_,_,_] = 0
 countXmas ('X':'M':'A':'S':xs) = 1 + countXmas xs
 countXmas (_:xs) = countXmas xs
+
+
+-- | Convert the String matrix to a list of tuples with a Char and an x and y position.
+matrixToIdList :: Int -> [String] -> [(Char, Int, Int)]
+matrixToIdList _ [] = []
+matrixToIdList n (x:xs) = rowIds n 0 x ++ matrixToIdList (n + 1) xs
+    where
+        rowIds :: Int -> Int -> String -> [(Char, Int, Int)]
+        rowIds _ _ [] = []
+        rowIds m o (y:ys) = (y, m, o) : rowIds m (o + 1) ys
+
+
+-- | Filter all entries out of the list that are the middle of the X-MAS
+filterAs :: [(Char, Int, Int)] -> [(Char, Int, Int)]
+filterAs = filter (\(c, _, _) -> c == 'A')
+
+
+-- | Get all relevant and neighbouring entries
+getNeighbours :: (Char, Int, Int) -> [(Char, Int, Int)] -> [(Char, Int, Int)]
+getNeighbours (_, x, y) = filter (\(c, i, j) -> abs (x - i) == 1 && abs (y - j) == 1 && (c == 'M' || c == 'S'))
+
+
+-- | Generate possible counterparts
+getCounterparts :: (Char, Int, Int) -> [(Char, Int, Int)]
+getCounterparts (c, x, y) | c == 'M' = [('S', (x - 2), (y - 2)), ('S', (x + 2), (y + 2)), ('S', (x + 2), (y - 2)), ('S', (x - 2), (y + 2))]
+    | c == 'S' = [('M', (x - 2), (y - 2)), ('M', (x + 2), (y + 2)), ('M', (x + 2), (y - 2)), ('M', (x - 2), (y + 2))]
+    | otherwise = error "There are still entries in the list that are not either M or S"
