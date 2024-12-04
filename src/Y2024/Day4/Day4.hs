@@ -23,7 +23,7 @@ countTotal xs = horizontal xs + vertical xs + diagonal1 xs + diagonal2 xs
     where
         horizontal = sum . map countHorizontal
         vertical = horizontal . transpose
-        diagonal1 ys = sum (map (countXmas . reverse) (diagonals ys)) + sum (map countXmas (diagonals ys))
+        diagonal1 = horizontal . diagonals
         diagonal2 = diagonal1 . transpose . map reverse
 
 
