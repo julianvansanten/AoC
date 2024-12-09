@@ -22,6 +22,7 @@ description:         Please see the README on GitHub at <https://github.com/juli
 dependencies:
 - base >= 4.7 && < 5
 - parsec >= 3.1.16
+- universe-base
 
 ghc-options:
 - -Wall
@@ -58,3 +59,5 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - AoC
+    - hspec
+    - QuickCheck

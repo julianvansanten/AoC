@@ -1,6 +1,6 @@
 cabal-version: 2.2
 
--- This file has been generated from package.yaml by hpack version 0.36.0.
+-- This file has been generated from package.yaml by hpack version 0.37.0.
 --
 -- see: https://github.com/sol/hpack
 
@@ -61,6 +61,7 @@ library
   build-depends:
       base >=4.7 && <5
     , parsec >=3.1.16
+    , universe-base
   default-language: Haskell2010
 
 executable AoC-exe
@@ -76,12 +77,17 @@ executable AoC-exe
       AoC
     , base >=4.7 && <5
     , parsec >=3.1.16
+    , universe-base
   default-language: Haskell2010
 
 test-suite AoC-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Y2024.Day1.Day1Spec
+      Y2024.Day2.Day2Spec
+      Y2024.Day3.Day3Spec
+      Y2024.Day4.Day4Spec
       Paths_AoC
   autogen-modules:
       Paths_AoC
@@ -90,6 +96,9 @@ test-suite AoC-test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       AoC
+    , QuickCheck
     , base >=4.7 && <5
+    , hspec
     , parsec >=3.1.16
+    , universe-base
   default-language: Haskell2010
