@@ -1,13 +1,13 @@
 module Y2024.Day5.Day5 (getDaySolutions) where
 import qualified Text.Parsec.Token as Token
 import qualified Data.Functor.Identity
-import qualified Text.Parsec.Prim
 import Text.Parsec.Language (emptyDef)
-import Text.Parsec.Char (string, char, spaces)
+import Text.Parsec.Char (string, char, spaces, digit)
 import Text.Parsec.String (Parser)
-import Text.Parsec.Combinator (sepBy)
+import Text.Parsec.Combinator (sepBy, many1)
 import Text.Parsec (parse, try, endBy)
-import Control.Applicative (many)
+import Control.Applicative (some)
+import Text.Parsec.Combinator (sepBy1)
 
 
 getDaySolutions :: (String -> String, String -> String)
@@ -23,8 +23,9 @@ solve2 = error "Second solution of day 5 not implemented yet!"
 
 lexer :: Token.GenTokenParser String u Data.Functor.Identity.Identity
 lexer = Token.makeTokenParser emptyDef
-integer :: Text.Parsec.Prim.ParsecT   String u Data.Functor.Identity.Identity Integer
-integer = Token.integer lexer
+
+integer :: Parser Integer
+integer = read <$> many1 digit
 
 
 -- | Parse a String to a PrintQueue
@@ -37,8 +38,8 @@ parsePrintQueue s = case parse printQueue "" s of
 -- | Parse a PrintQueue.
 printQueue :: Parser PrintQueue
 printQueue = do
-    constraints <- many (try (constraint <* spaces))
-    lists <- endBy numbers spaces
+    constraints <- constraint `sepBy1` char '\n'
+    lists <- numbers `sepBy1` char '\n'
     return $ PQ constraints lists
 
 
