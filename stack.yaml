@@ -42,6 +42,7 @@ packages:
 #
 extra-deps:
   - parsec-3.1.16.1@sha256:5769242043b01bf759b07b7efedcb19607837ee79015fcddde34645664136aed,4691
+  - number-length-0.2.1.0
 
 # Override default flag values for local packages and extra-deps
 # flags: {}

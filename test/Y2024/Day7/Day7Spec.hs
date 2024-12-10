@@ -18,12 +18,12 @@ sample = "190: 10 19\n3267: 81 40 27\n83: 17 5\n156: 15 6\n7290: 6 8 6 15\n16101
 test1 :: Spec
 test1 = describe "Y2024.Day7.Day7.solve1" $ do
     let solve1 = fst getDaySolutions
-    it "returns the correct answer for the example" $ do
+    it "should correctly return the sum of possible mul/add combinations" $ do
         solve1 sample `shouldBe` "3749"
 
 
 test2 :: Spec
 test2 = describe "Y2024.Day7.Day7.solve2" $ do
     let solve2 = snd getDaySolutions
-    it "is not implemented yet" $ do
-        False
+    it "should correctly return the sum of possible mul/add/app combinations" $ do
+        solve2 sample `shouldBe` "11387"
