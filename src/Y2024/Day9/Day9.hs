@@ -1,4 +1,4 @@
-module Y2024.Day9.Day9 (getDaySolutions, insertBlock, Block(..)) where
+module Y2024.Day9.Day9 (getDaySolutions) where
 
 import Data.Char (digitToInt)
 
@@ -11,7 +11,7 @@ solve1 :: String -> String
 solve1 = show . checksum 0 . compactDisk . addIds 0 . parseDisk
 
 solve2 :: String -> String
-solve2 = error "Second solution of day 9 not implemented yet!"
+solve2 = concatMap show . compactEfficientDisk . toEfficientDisk . addIds 0 . parseDisk
 
 
 -- | A file block has an ID
@@ -32,6 +32,11 @@ instance Show Block where
     show (DataBlock n) = show n
     show Empty = "."
     show Nop = ""
+
+
+instance Show Block2 where
+    show (Datablocks n m) = replicate m (head $ show n)
+    show (EmptySpace m) = replicate m '.'
 
 
 -- | A disk contains a list of blocks
@@ -91,3 +96,23 @@ toEfficientDisk [] = []
 toEfficientDisk (Nop:_) = error "Nop blocks should not be in the disk"
 toEfficientDisk l@(DataBlock n:_) = Datablocks n (length $ takeWhile (== DataBlock n) l) : toEfficientDisk (dropWhile (== DataBlock n) l)
 toEfficientDisk l@(Empty:_) = EmptySpace (length $ takeWhile (== Empty) l) : toEfficientDisk (dropWhile (== Empty) l)
+
+
+insertBlock2 :: Block2 -> EfficientDisk -> EfficientDisk
+insertBlock2 _ [] = []
+insertBlock2 (EmptySpace _) xs = xs
+insertBlock2 (Datablocks n m) (EmptySpace e:xs) | m == e = Datablocks n m : clearPrevious (Datablocks n m) xs
+    | m < e = [Datablocks n m] ++ [EmptySpace (e - m)] ++ clearPrevious (Datablocks n m) xs
+    | otherwise = EmptySpace e : insertBlock2 (Datablocks n m) xs
+insertBlock2 b (x:xs) = x : insertBlock2 b xs
+
+
+clearPrevious :: Block2 -> EfficientDisk -> EfficientDisk
+clearPrevious _ [] = []
+clearPrevious (Datablocks id' len') (Datablocks id'' len'':xs) | id' == id'' && len' == len'' = EmptySpace len' : xs
+    | otherwise = Datablocks id'' len'' : clearPrevious (Datablocks id' len') xs
+clearPrevious b (x:xs) = x : clearPrevious b xs
+
+
+compactEfficientDisk :: EfficientDisk -> EfficientDisk
+compactEfficientDisk disk = foldr insertBlock2 disk $ filter (/= EmptySpace 0) disk

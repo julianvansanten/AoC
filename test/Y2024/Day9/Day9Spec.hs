@@ -26,5 +26,5 @@ test1 = describe "Y2024.Day9.Day9.solve1" $ do
 test2 :: Spec
 test2 = describe "Y2024.Day9.Day9.solve2" $ do
     let solve2 = snd getDaySolutions
-    it "is not implemented yet" $ do
-        False
+    it "should fit whole files and compute correct checksum" $ do
+        solve2 sample `shouldBe` "2858"
