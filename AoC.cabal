@@ -25,6 +25,7 @@ source-repository head
 
 library
   exposed-modules:
+      Util
       Y2024.Day1.Day1
       Y2024.Day10.Day10
       Y2024.Day11.Day11
@@ -88,6 +89,7 @@ test-suite AoC-test
       Y2024.Day2.Day2Spec
       Y2024.Day3.Day3Spec
       Y2024.Day4.Day4Spec
+      Y2024.Day5.Day5Spec
       Paths_AoC
   autogen-modules:
       Paths_AoC
