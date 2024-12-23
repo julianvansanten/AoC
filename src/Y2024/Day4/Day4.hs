@@ -1,7 +1,7 @@
 module Y2024.Day4.Day4 (getDaySolutions) where
 
 
-import Data.List (transpose)
+import Data.List (transpose, intersect, nub)
 import Data.Universe.Helpers (diagonals)
 
 
@@ -13,15 +13,16 @@ solve1 :: String -> String
 solve1 = show . countTotal . lines
 
 solve2 :: String -> String
-solve2 str = show neighbours
+solve2 str = show $ length $ filter (\l -> checkOpposing l l) intersection
     where
         strIndices = matrixToIdList 0 (lines str)
         aLocations = filterAs strIndices
         neighbours = concatMap (`getNeighbours` strIndices) aLocations
+        possibleMXs = map getCounterparts aLocations
+        intersection = filter (\l -> length l == 4) $ map (nub . intersect neighbours) possibleMXs
 
 
 -- | Count the total number of occurrances of XMAS in a matrix
--- TODO: add diagonals
 countTotal :: [String] -> Int
 countTotal xs = horizontal xs + vertical xs + diagonal1 xs + diagonal2 xs
     where
@@ -66,8 +67,20 @@ getNeighbours :: (Char, Int, Int) -> [(Char, Int, Int)] -> [(Char, Int, Int)]
 getNeighbours (_, x, y) = filter (\(c, i, j) -> abs (x - i) == 1 && abs (y - j) == 1 && (c == 'M' || c == 'S'))
 
 
--- | Generate possible counterparts
+-- | Generate possible counterparts for A characters
 getCounterparts :: (Char, Int, Int) -> [(Char, Int, Int)]
-getCounterparts (c, x, y) | c == 'M' = [('S', (x - 2), (y - 2)), ('S', (x + 2), (y + 2)), ('S', (x + 2), (y - 2)), ('S', (x - 2), (y + 2))]
-    | c == 'S' = [('M', (x - 2), (y - 2)), ('M', (x + 2), (y + 2)), ('M', (x + 2), (y - 2)), ('M', (x - 2), (y + 2))]
-    | otherwise = error "There are still entries in the list that are not either M or S"
+getCounterparts ('A', x, y) = [(ch, i, j) | ch <- ['M', 'S'], i <- [x - 1, x + 1], j <- [y - 1, y + 1]]
+getCounterparts _ = error "Function should only receive A locations"
+
+
+-- | Check if all M and S characters are opposing each other
+checkOpposing :: [(Char, Int, Int)] -> [(Char, Int, Int)] -> Bool
+checkOpposing _ [] = True
+checkOpposing ys (x:xs) = containsOpposing x ys && checkOpposing ys xs
+
+
+-- | Check if list constains opposing M and S characters
+containsOpposing :: (Char, Int, Int) -> [(Char, Int, Int)] -> Bool
+containsOpposing ('M', x, y) = any (\(c, i, j) -> c == 'S' && abs (x - i) == 2 && abs (y - j) == 2)
+containsOpposing ('S', x, y) = any (\(c, i, j) -> c == 'M' && abs (x - i) == 2 && abs (y - j) == 2)
+containsOpposing _ = error "Function should only receive M or S locations"
