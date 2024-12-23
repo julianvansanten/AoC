@@ -1,7 +1,7 @@
 module Y2024.Day5.Day5Spec (spec) where
 
 
-import Y2024.Day5.Day5 (getDaySolutions, parseAndShow)
+import Y2024.Day5.Day5 (getDaySolutions, parseAndShow, fixOrder)
 import Test.Hspec (Spec, describe, it, shouldBe)
 
 
@@ -10,6 +10,7 @@ spec = do
     test1 
     test2
     testParseAndShow
+    testFixOrder
 
 
 sample :: String
@@ -32,3 +33,9 @@ testParseAndShow :: Spec
 testParseAndShow = describe "Y2024.Day5.Day5.parseAndShow" $ do
     it "should return the exact same string when given the sample" $ do
         parseAndShow sample `shouldBe` sample
+
+
+testFixOrder :: Spec
+testFixOrder = describe "Y2024.Day5.Day5.fixOrder" $ do
+    it "should return the fixed order of the lists" $ do
+        fixOrder sample `shouldBe` [[97,75,47,61,53], [61,29,13], [97,75,47,29,13]]

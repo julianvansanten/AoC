@@ -1,4 +1,4 @@
-module Y2024.Day5.Day5 (getDaySolutions, parseAndShow) where
+module Y2024.Day5.Day5 (getDaySolutions, parseAndShow, fixOrder) where
 import Util (Parser, AoCShow(..))
 import Text.Parsec.Char ( string, char, digit, newline )
 import Text.Parsec.Combinator ( sepBy, many1, sepEndBy1 )
@@ -15,15 +15,24 @@ solve1 :: String -> String
 solve1 = show . sum . map (\l -> l!!(length l `div` 2)) . filterConstraints id . parsePrintQueue
 
 solve2 :: String -> String
-solve2 = show  . sum . map (\l -> l!!(length l `div` 2)) . getNumbers . fixPrintQueue . removePassing . parsePrintQueue
+solve2 = show . sum . map (\l -> l!!(length l `div` 2)) . getNumbers . fixPrintQueue . removePassing . parsePrintQueue
 
 
+-- | Parse a string and return the result of the AoCShow instance.
+-- Correctly formatted strings should return the same string.
 parseAndShow :: String -> String
 parseAndShow = aocShow . parsePrintQueue
 
 
+-- | Fix the order of lists with broken constraints from a string with a PrintQueue.
+fixOrder :: String -> [[Int]]
+fixOrder = getNumbers . fixPrintQueue . removePassing . parsePrintQueue
+
+
+-- | Custom Int parser that does not parse whitespace.
 integer :: Parser Int
 integer = read <$> many1 digit
+
 
 -- | Parse a String to a PrintQueue
 parsePrintQueue :: String -> PrintQueue
@@ -89,21 +98,21 @@ removePassing pq@(PQ cs _) = PQ cs (filter (/= []) (filterConstraints not pq))
 
 
 -- | Fix a single constraint on a list of numbers.
-fixConstraint :: (Int, Int) -> [Int] -> [Int]
-fixConstraint _ [] = []
-fixConstraint _ [x] = [x]
-fixConstraint (f, s) (x:xs) | s == x = f : x : filter (/= f) xs
-    | otherwise = x : fixConstraint (f, s) xs
+fixConstraint :: [Int] -> (Int, Int) -> [Int]
+fixConstraint [] _ = []
+fixConstraint [x] _ = [x]
+fixConstraint (x:xs) (f, s) | s == x = f : x : filter (/= f) xs
+    | otherwise = x : fixConstraint xs (f, s)
 
 
--- | For a list of constraints, filter all broken constraints for a given list.
+-- | For a list of numbers and a list of constraints, filter out the constraints that are broken.
 filterBrokenConstraints :: [Int] -> [(Int, Int)] -> [(Int, Int)]
 filterBrokenConstraints xs = filter (\c -> not (checkConstraint c xs))
 
 
 -- | Fix a PrintQueue once.
 fixOncePrintQueue :: PrintQueue -> PrintQueue
-fixOncePrintQueue (PQ cs xss) = PQ cs (map (\xs -> foldr fixConstraint xs (filterBrokenConstraints xs cs)) xss)
+fixOncePrintQueue (PQ cs xss) = PQ cs (map (\xs -> foldl fixConstraint xs (filterBrokenConstraints xs cs)) xss)
 
 
 -- | Check in an infinite list of `a`s for a fixed point.
